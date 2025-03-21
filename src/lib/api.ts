@@ -1,257 +1,282 @@
+import { Course, Quiz, User } from "@/lib/types";
 
-import { ChatMessage, Course, Quiz, User, UserProgress } from "./types";
-import { mockCourses, mockQuizzes, OPENAI_API_KEY } from "./constants";
-
-// Simulate an API with localStorage persistence
+// Mock API functions
 export const api = {
-  // Auth functions
   auth: {
-    register: async (email: string, password: string, name: string): Promise<User> => {
-      // Check if user exists
-      const existingUsers = JSON.parse(localStorage.getItem("users") || "[]");
-      if (existingUsers.find((u: any) => u.email === email)) {
-        throw new Error("User already exists");
-      }
+    login: async (email: string, password: string): Promise<User> => {
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
-      // Create new user
-      const newUser: User = {
-        id: `user-${Date.now()}`,
-        email,
-        name,
+      const mockUser: User = {
+        id: "1",
+        email: email,
+        name: "John Doe",
         createdAt: new Date(),
         progress: {
+          level: 1,
+          points: 0,
+          title: "Beginner",
           completedCourses: [],
           completedQuizzes: [],
-          loginStreak: 1,
-          lastLogin: new Date(),
-          points: 0,
-          level: 1,
-          title: "Cyber Novice"
-        }
+        },
       };
 
-      // Save user
-      localStorage.setItem("users", JSON.stringify([...existingUsers, newUser]));
-      localStorage.setItem("currentUser", JSON.stringify(newUser));
-
-      return newUser;
+      return mockUser;
     },
+    register: async (email: string, password: string, name: string): Promise<User> => {
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
-    login: async (email: string, password: string): Promise<User> => {
-      // In a real app, we would validate the password
-      const users = JSON.parse(localStorage.getItem("users") || "[]");
-      const user = users.find((u: any) => u.email === email);
-
-      if (!user) {
-        throw new Error("Invalid credentials");
-      }
-
-      // Update login streak
-      const lastLogin = new Date(user.progress.lastLogin);
-      const today = new Date();
-      const diffTime = Math.abs(today.getTime() - lastLogin.getTime());
-      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
-      if (diffDays === 1) {
-        user.progress.loginStreak += 1;
-      } else if (diffDays > 1) {
-        user.progress.loginStreak = 1;
-      }
-
-      user.progress.lastLogin = today;
-
-      // Update user
-      localStorage.setItem("users", JSON.stringify(users.map((u: any) => 
-        u.id === user.id ? user : u
-      )));
-      localStorage.setItem("currentUser", JSON.stringify(user));
-
-      return user;
-    },
-
-    logout: async (): Promise<void> => {
-      localStorage.removeItem("currentUser");
-    },
-
-    getCurrentUser: (): User | null => {
-      const userStr = localStorage.getItem("currentUser");
-      if (!userStr) return null;
-      
-      try {
-        const user = JSON.parse(userStr);
-        // Ensure dates are Date objects
-        user.createdAt = new Date(user.createdAt);
-        user.progress.lastLogin = new Date(user.progress.lastLogin);
-        return user;
-      } catch (error) {
-        console.error("Error parsing user", error);
-        return null;
-      }
-    },
-
-    updateUserProgress: async (progress: Partial<UserProgress>): Promise<User> => {
-      const currentUser = api.auth.getCurrentUser();
-      if (!currentUser) {
-        throw new Error("Not authenticated");
-      }
-
-      const updatedUser = {
-        ...currentUser,
+      const mockUser: User = {
+        id: "1",
+        email: email,
+        name: name,
+        createdAt: new Date(),
         progress: {
-          ...currentUser.progress,
-          ...progress
-        }
+          level: 1,
+          points: 0,
+          title: "Beginner",
+          completedCourses: [],
+          completedQuizzes: [],
+        },
       };
 
-      // Update in users array
-      const users = JSON.parse(localStorage.getItem("users") || "[]");
-      localStorage.setItem("users", JSON.stringify(users.map((u: any) => 
-        u.id === currentUser.id ? updatedUser : u
-      )));
+      return mockUser;
+    },
+    logout: async (): Promise<void> => {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    },
+    getCurrentUser: (): User | null => {
+      return null;
+    },
+    updateUserProgress: async (progress: any): Promise<User> => {
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
-      // Update current user
-      localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+      const mockUser: User = {
+        id: "1",
+        email: "john.doe@example.com",
+        name: "John Doe",
+        createdAt: new Date(),
+        progress: {
+          level: 1,
+          points: progress.points || 0,
+          title: "Beginner",
+          completedCourses: progress.completedCourses || [],
+          completedQuizzes: progress.completedQuizzes || [],
+        },
+      };
 
-      return updatedUser;
-    }
+      return mockUser;
+    },
   },
-
-  // Course functions
   courses: {
-    getAll: async (): Promise<Course[]> => {
-      // In a real app, this would fetch from an API
-      return mockCourses;
+    getAllCourses: async (): Promise<Course[]> => {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      return COURSES_DATA;
     },
-
-    getById: async (id: string): Promise<Course | undefined> => {
-      return mockCourses.find(course => course.id === id);
+    getCourseById: async (id: string): Promise<Course | undefined> => {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      return COURSES_DATA.find((course) => course.id === id);
     },
-
-    getRecommended: async (userId: string): Promise<Course[]> => {
-      // In a real app, this would use AI to recommend courses based on user progress
-      return mockCourses.slice(0, 3);
-    }
   },
-
-  // Quiz functions
   quizzes: {
-    getAll: async (): Promise<Quiz[]> => {
-      return mockQuizzes;
+    getAllQuizzes: async (): Promise<Quiz[]> => {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      return QUIZZES_DATA;
     },
-
-    getById: async (id: string): Promise<Quiz | undefined> => {
-      return mockQuizzes.find(quiz => quiz.id === id);
+    getQuizById: async (id: string): Promise<Quiz | undefined> => {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      return QUIZZES_DATA.find((quiz) => quiz.id === id);
     },
+    submitQuiz: async (quizId: string, selectedAnswers: number[], userId: string): Promise<{ score: number; passed: boolean; feedback: string[] }> => {
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
-    submitQuiz: async (quizId: string, answers: number[], userId: string): Promise<{
-      score: number;
-      passed: boolean;
-      feedback: string[];
-    }> => {
-      const quiz = await api.quizzes.getById(quizId);
+      const quiz = QUIZZES_DATA.find(q => q.id === quizId);
       if (!quiz) {
         throw new Error("Quiz not found");
       }
 
-      // Calculate score
-      let correctCount = 0;
+      let correctAnswers = 0;
       const feedback: string[] = [];
 
-      quiz.questions.forEach((question, index) => {
-        if (answers[index] === question.correctAnswer) {
-          correctCount++;
-          feedback.push(`Question ${index + 1}: Correct! ${question.explanation}`);
+      for (let i = 0; i < quiz.questions.length; i++) {
+        const question = quiz.questions[i];
+        const correctAnswerIndex = question.correctAnswer;
+        const selectedAnswer = selectedAnswers[i];
+
+        if (selectedAnswer === correctAnswerIndex) {
+          correctAnswers++;
+          feedback.push(`${question.question}: Correct!`);
         } else {
-          feedback.push(`Question ${index + 1}: Incorrect. ${question.explanation}`);
-        }
-      });
-
-      const score = (correctCount / quiz.questions.length) * 100;
-      const passed = score >= 80; // 8 out of 10 questions correct
-
-      // If passed, update user progress
-      if (passed) {
-        const currentUser = api.auth.getCurrentUser();
-        if (currentUser) {
-          const completedQuizzes = currentUser.progress.completedQuizzes || [];
-          if (!completedQuizzes.includes(quizId)) {
-            await api.auth.updateUserProgress({
-              completedQuizzes: [...completedQuizzes, quizId],
-              points: currentUser.progress.points + 10
-            });
-            
-            // Check for title updates
-            const totalQuizzesPassed = completedQuizzes.length + 1;
-            if (totalQuizzesPassed % 25 === 0) {
-              const newLevel = Math.floor(totalQuizzesPassed / 25) + 1;
-              await api.auth.updateUserProgress({
-                level: newLevel,
-                title: `Level ${newLevel} Expert`
-              });
-            }
-          }
+          feedback.push(`${question.question}: Incorrect. The correct answer was ${question.options[correctAnswerIndex]}.`);
         }
       }
+
+      const score = (correctAnswers / quiz.questions.length) * 100;
+      const passed = score >= 80;
 
       return {
-        score,
-        passed,
-        feedback
+        score: score,
+        passed: passed,
+        feedback: feedback,
       };
-    }
+    },
   },
-
-  // AI Chatbot functions
-  chatbot: {
-    sendMessage: async (message: string, chatHistory: ChatMessage[]): Promise<string> => {
-      try {
-        // Format conversation history for OpenAI
-        const messages = [
-          {
-            role: "system",
-            content: "You are a helpful cybersecurity and education tutor. Provide accurate, concise answers to questions about cybersecurity concepts, ethical hacking, network security, cryptography, and related educational topics."
-          },
-          ...chatHistory.map(msg => ({
-            role: msg.role,
-            content: msg.content
-          })),
-          {
-            role: "user",
-            content: message
-          }
-        ];
-
-        // Call OpenAI API
-        const response = await fetch("https://api.openai.com/v1/chat/completions", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${OPENAI_API_KEY}`
-          },
-          body: JSON.stringify({
-            model: "gpt-3.5-turbo",
-            messages,
-            temperature: 0.7,
-            max_tokens: 1000
-          })
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error?.message || "Failed to get response from AI");
-        }
-
-        const data = await response.json();
-        return data.choices[0].message.content;
-      } catch (error) {
-        console.error("Error calling OpenAI API:", error);
-        return "I'm having trouble connecting right now. Please try again later.";
-      }
-    }
-  }
 };
 
-// Initialize with some fake users if empty
-if (!localStorage.getItem("users")) {
-  localStorage.setItem("users", JSON.stringify([]));
-}
+// Mock types
+type CourseDifficulty = "beginner" | "intermediate" | "advanced";
+type QuizDifficulty = "beginner" | "intermediate" | "advanced";
+
+// Mock courses data
+const COURSES_DATA: Course[] = [
+  {
+    id: "1",
+    title: "Introduction to Cybersecurity",
+    description: "Learn the fundamentals of cybersecurity and best practices to protect your digital assets.",
+    imageUrl: "/placeholder.svg",
+    difficulty: "beginner",
+    category: "Security Basics",
+    estimatedTime: "3 hours",
+    topics: [
+      { title: "What is Cybersecurity?", completed: true },
+      { title: "Common Threats", completed: true },
+      { title: "Best Practices", completed: false },
+    ]
+  },
+  {
+    id: "2",
+    title: "Network Security",
+    description: "Explore network security concepts, protocols, and tools to protect your network infrastructure.",
+    imageUrl: "/placeholder.svg",
+    difficulty: "intermediate",
+    category: "Network Security",
+    estimatedTime: "5 hours",
+    topics: [
+      { title: "Network Architecture", completed: true },
+      { title: "Firewalls and Intrusion Detection", completed: false },
+      { title: "VPNs and Encryption", completed: false },
+    ]
+  },
+  {
+    id: "3",
+    title: "Ethical Hacking",
+    description: "Discover the world of ethical hacking and penetration testing to identify vulnerabilities in systems.",
+    imageUrl: "/placeholder.svg",
+    difficulty: "advanced",
+    category: "Offensive Security",
+    estimatedTime: "7 hours",
+    topics: [
+      { title: "Reconnaissance and Scanning", completed: true },
+      { title: "Exploitation Techniques", completed: false },
+      { title: "Reporting and Remediation", completed: false },
+    ]
+  },
+];
+
+// Mock quizzes data
+const QUIZZES_DATA: Quiz[] = [
+  {
+    id: "1",
+    title: "Cybersecurity Fundamentals Quiz",
+    description: "Test your knowledge on basic cybersecurity concepts and best practices.",
+    imageUrl: "/placeholder.svg",
+    category: "Security Basics",
+    difficulty: "beginner",
+    questions: [
+      {
+        question: "What is the primary goal of cybersecurity?",
+        options: [
+          "To disrupt network communications",
+          "To protect digital assets and data",
+          "To create malicious software",
+          "To monitor user activity",
+        ],
+        correctAnswer: 1,
+      },
+      {
+        question: "Which of the following is a common type of cyber threat?",
+        options: ["Antivirus", "Firewall", "Malware", "Encryption"],
+        correctAnswer: 2,
+      },
+      {
+        question: "What does the acronym 'CIA' stand for in cybersecurity?",
+        options: [
+          "Confidentiality, Integrity, Availability",
+          "Central Intelligence Agency",
+          "Cybersecurity Intelligence Agency",
+          "Critical Information Asset",
+        ],
+        correctAnswer: 0,
+      },
+    ]
+  },
+  {
+    id: "2",
+    title: "Network Security Quiz",
+    description: "Test your knowledge on network security concepts, protocols, and tools.",
+    imageUrl: "/placeholder.svg",
+    category: "Network Security",
+    difficulty: "intermediate",
+    questions: [
+      {
+        question: "What is a firewall?",
+        options: [
+          "A tool for monitoring network traffic",
+          "A security system that controls network access",
+          "A type of encryption",
+          "A method for creating virtual networks",
+        ],
+        correctAnswer: 1,
+      },
+      {
+        question: "Which protocol is commonly used for secure communication over the internet?",
+        options: ["HTTP", "FTP", "SMTP", "HTTPS"],
+        correctAnswer: 3,
+      },
+      {
+        question: "What is a VPN?",
+        options: [
+          "Virtual Private Network",
+          "Very Personal Network",
+          "Video Processing Network",
+          "Voice over IP Network",
+        ],
+        correctAnswer: 0,
+      },
+    ]
+  },
+  {
+    id: "3",
+    title: "Ethical Hacking Quiz",
+    description: "Test your knowledge on ethical hacking and penetration testing techniques.",
+    imageUrl: "/placeholder.svg",
+    category: "Offensive Security",
+    difficulty: "advanced",
+    questions: [
+      {
+        question: "What is reconnaissance in ethical hacking?",
+        options: [
+          "Exploiting system vulnerabilities",
+          "Gathering information about a target",
+          "Creating malicious software",
+          "Securing network communications",
+        ],
+        correctAnswer: 1,
+      },
+      {
+        question: "Which of the following is a common vulnerability scanning tool?",
+        options: ["Wireshark", "Nmap", "Metasploit", "John the Ripper"],
+        correctAnswer: 1,
+      },
+      {
+        question: "What is the purpose of penetration testing?",
+        options: [
+          "To identify and exploit vulnerabilities",
+          "To secure network infrastructure",
+          "To monitor user activity",
+          "To create secure passwords",
+        ],
+        correctAnswer: 0,
+      },
+    ]
+  },
+];
