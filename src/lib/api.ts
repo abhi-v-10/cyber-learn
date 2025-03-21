@@ -1,3 +1,4 @@
+
 import { Course, Quiz, User } from "@/lib/types";
 
 // Mock API functions
@@ -17,6 +18,8 @@ export const api = {
           title: "Beginner",
           completedCourses: [],
           completedQuizzes: [],
+          loginStreak: 1,
+          lastLogin: new Date(),
         },
       };
 
@@ -36,6 +39,8 @@ export const api = {
           title: "Beginner",
           completedCourses: [],
           completedQuizzes: [],
+          loginStreak: 1,
+          lastLogin: new Date(),
         },
       };
 
@@ -61,6 +66,8 @@ export const api = {
           title: "Beginner",
           completedCourses: progress.completedCourses || [],
           completedQuizzes: progress.completedQuizzes || [],
+          loginStreak: progress.loginStreak || 1,
+          lastLogin: new Date(),
         },
       };
 
@@ -76,6 +83,13 @@ export const api = {
       await new Promise((resolve) => setTimeout(resolve, 500));
       return COURSES_DATA.find((course) => course.id === id);
     },
+    // Add alias functions for component compatibility
+    getAll: async (): Promise<Course[]> => {
+      return api.courses.getAllCourses();
+    },
+    getById: async (id: string): Promise<Course | undefined> => {
+      return api.courses.getCourseById(id);
+    }
   },
   quizzes: {
     getAllQuizzes: async (): Promise<Quiz[]> => {
@@ -119,7 +133,20 @@ export const api = {
         feedback: feedback,
       };
     },
+    // Add alias functions for component compatibility
+    getAll: async (): Promise<Quiz[]> => {
+      return api.quizzes.getAllQuizzes();
+    },
+    getById: async (id: string): Promise<Quiz | undefined> => {
+      return api.quizzes.getQuizById(id);
+    }
   },
+  chatbot: {
+    sendMessage: async (message: string, history: any[]): Promise<string> => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      return `This is a mock response to your message: "${message}". In a real implementation, this would connect to an AI service using your API key.`;
+    }
+  }
 };
 
 // Mock types
@@ -137,9 +164,9 @@ const COURSES_DATA: Course[] = [
     category: "Security Basics",
     estimatedTime: "3 hours",
     topics: [
-      { title: "What is Cybersecurity?", completed: true },
-      { title: "Common Threats", completed: true },
-      { title: "Best Practices", completed: false },
+      { id: "1-1", title: "What is Cybersecurity?", content: "Introduction to cybersecurity concepts", imageUrl: "/placeholder.svg" },
+      { id: "1-2", title: "Common Threats", content: "Overview of common cybersecurity threats", imageUrl: "/placeholder.svg" },
+      { id: "1-3", title: "Best Practices", content: "Cybersecurity best practices", imageUrl: "/placeholder.svg" },
     ]
   },
   {
@@ -151,9 +178,9 @@ const COURSES_DATA: Course[] = [
     category: "Network Security",
     estimatedTime: "5 hours",
     topics: [
-      { title: "Network Architecture", completed: true },
-      { title: "Firewalls and Intrusion Detection", completed: false },
-      { title: "VPNs and Encryption", completed: false },
+      { id: "2-1", title: "Network Architecture", content: "Understanding network architecture", imageUrl: "/placeholder.svg" },
+      { id: "2-2", title: "Firewalls and Intrusion Detection", content: "Working with firewalls and IDS", imageUrl: "/placeholder.svg" },
+      { id: "2-3", title: "VPNs and Encryption", content: "VPN technologies and encryption methods", imageUrl: "/placeholder.svg" },
     ]
   },
   {
@@ -165,9 +192,9 @@ const COURSES_DATA: Course[] = [
     category: "Offensive Security",
     estimatedTime: "7 hours",
     topics: [
-      { title: "Reconnaissance and Scanning", completed: true },
-      { title: "Exploitation Techniques", completed: false },
-      { title: "Reporting and Remediation", completed: false },
+      { id: "3-1", title: "Reconnaissance and Scanning", content: "Information gathering techniques", imageUrl: "/placeholder.svg" },
+      { id: "3-2", title: "Exploitation Techniques", content: "Common exploitation methods", imageUrl: "/placeholder.svg" },
+      { id: "3-3", title: "Reporting and Remediation", content: "Creating security reports", imageUrl: "/placeholder.svg" },
     ]
   },
 ];
@@ -183,6 +210,7 @@ const QUIZZES_DATA: Quiz[] = [
     difficulty: "beginner",
     questions: [
       {
+        id: "q1-1",
         question: "What is the primary goal of cybersecurity?",
         options: [
           "To disrupt network communications",
@@ -191,13 +219,17 @@ const QUIZZES_DATA: Quiz[] = [
           "To monitor user activity",
         ],
         correctAnswer: 1,
+        explanation: "The primary goal of cybersecurity is to protect digital assets and data from threats."
       },
       {
+        id: "q1-2",
         question: "Which of the following is a common type of cyber threat?",
         options: ["Antivirus", "Firewall", "Malware", "Encryption"],
         correctAnswer: 2,
+        explanation: "Malware is a common type of cyber threat, while the others are security tools or methods."
       },
       {
+        id: "q1-3",
         question: "What does the acronym 'CIA' stand for in cybersecurity?",
         options: [
           "Confidentiality, Integrity, Availability",
@@ -206,6 +238,7 @@ const QUIZZES_DATA: Quiz[] = [
           "Critical Information Asset",
         ],
         correctAnswer: 0,
+        explanation: "In cybersecurity, CIA stands for Confidentiality, Integrity, and Availability, which are the three main principles."
       },
     ]
   },
@@ -218,6 +251,7 @@ const QUIZZES_DATA: Quiz[] = [
     difficulty: "intermediate",
     questions: [
       {
+        id: "q2-1",
         question: "What is a firewall?",
         options: [
           "A tool for monitoring network traffic",
@@ -226,13 +260,17 @@ const QUIZZES_DATA: Quiz[] = [
           "A method for creating virtual networks",
         ],
         correctAnswer: 1,
+        explanation: "A firewall is a security system that controls network access based on predetermined rules."
       },
       {
+        id: "q2-2",
         question: "Which protocol is commonly used for secure communication over the internet?",
         options: ["HTTP", "FTP", "SMTP", "HTTPS"],
         correctAnswer: 3,
+        explanation: "HTTPS (HTTP Secure) is used for secure communication over the internet."
       },
       {
+        id: "q2-3",
         question: "What is a VPN?",
         options: [
           "Virtual Private Network",
@@ -241,6 +279,7 @@ const QUIZZES_DATA: Quiz[] = [
           "Voice over IP Network",
         ],
         correctAnswer: 0,
+        explanation: "VPN stands for Virtual Private Network, which creates a secure connection over public networks."
       },
     ]
   },
@@ -253,6 +292,7 @@ const QUIZZES_DATA: Quiz[] = [
     difficulty: "advanced",
     questions: [
       {
+        id: "q3-1",
         question: "What is reconnaissance in ethical hacking?",
         options: [
           "Exploiting system vulnerabilities",
@@ -261,13 +301,17 @@ const QUIZZES_DATA: Quiz[] = [
           "Securing network communications",
         ],
         correctAnswer: 1,
+        explanation: "Reconnaissance is the process of gathering information about a target before attempting any exploitation."
       },
       {
+        id: "q3-2",
         question: "Which of the following is a common vulnerability scanning tool?",
         options: ["Wireshark", "Nmap", "Metasploit", "John the Ripper"],
         correctAnswer: 1,
+        explanation: "Nmap is a network scanner commonly used for vulnerability scanning."
       },
       {
+        id: "q3-3",
         question: "What is the purpose of penetration testing?",
         options: [
           "To identify and exploit vulnerabilities",
@@ -276,6 +320,7 @@ const QUIZZES_DATA: Quiz[] = [
           "To create secure passwords",
         ],
         correctAnswer: 0,
+        explanation: "The purpose of penetration testing is to identify and exploit vulnerabilities to assess security."
       },
     ]
   },
