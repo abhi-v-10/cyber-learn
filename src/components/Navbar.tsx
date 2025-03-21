@@ -1,193 +1,73 @@
-
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
-import {
-  BookOpen,
-  LogOut,
-  Menu,
-  MessageSquare,
-  User,
-  X,
-  ShieldCheck,
-  Home,
-  Award
-} from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useLocation } from 'react-router-dom';
 
 export const Navbar = () => {
   const { user, logout } = useAuth();
-  const navigate = useNavigate();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const location = useLocation();
 
-  const handleLogout = async () => {
-    await logout();
-    navigate("/login");
+  const isActive = (path: string) => {
+    return location.pathname === path;
   };
 
   const navItems = [
-    { name: "Home", path: "/", icon: <Home className="h-5 w-5 mr-2" /> },
-    { name: "Courses", path: "/courses", icon: <BookOpen className="h-5 w-5 mr-2" /> },
-    { name: "Quizzes", path: "/quizzes", icon: <ShieldCheck className="h-5 w-5 mr-2" /> },
-    { name: "Chatbot", path: "/chatbot", icon: <MessageSquare className="h-5 w-5 mr-2" /> },
-    { name: "Progress", path: "/progress", icon: <Award className="h-5 w-5 mr-2" /> },
+    { title: "Home", href: "/" },
+    { title: "Courses", href: "/courses" },
+    { title: "Quizzes", href: "/quizzes" },
+    { title: "Tools", href: "/tools" },
+    { title: "Chatbot", href: "/chatbot" },
+    { title: "Progress", href: "/progress" },
   ];
 
   return (
-    <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          {/* Logo and desktop navigation */}
-          <div className="flex items-center">
-            <Link to="/" className="flex items-center">
-              <div className="flex items-center gap-2">
-                <div className="flex items-center justify-center h-10 w-10 rounded-md bg-primary text-primary-foreground">
-                  <ShieldCheck className="h-6 w-6" />
-                </div>
-                <span className="text-xl font-bold">CyberEdu</span>
-              </div>
-            </Link>
-            <div className="hidden md:ml-10 md:flex md:space-x-4">
-              {navItems.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.path}
-                  className="flex items-center px-4 py-2 text-sm font-medium rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
-                >
-                  {item.icon}
-                  {item.name}
-                </Link>
-              ))}
-            </div>
-          </div>
+    <nav className="bg-background border-b sticky top-0 z-50">
+      <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+        <Link to="/" className="text-2xl font-bold">
+          CyberLearn
+        </Link>
 
-          {/* Mobile menu button */}
-          <div className="md:hidden flex items-center">
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
-            >
-              {mobileMenuOpen ? (
-                <X className="block h-6 w-6" />
-              ) : (
-                <Menu className="block h-6 w-6" />
-              )}
-            </button>
-          </div>
-
-          {/* User dropdown (desktop) */}
-          <div className="hidden md:flex md:items-center">
-            {user ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-                    <Avatar>
-                      <AvatarImage src="" />
-                      <AvatarFallback className="bg-primary text-primary-foreground">
-                        {user.name.substring(0, 2).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuLabel>
-                    <div className="flex flex-col">
-                      <span>{user.name}</span>
-                      <span className="text-xs text-muted-foreground">{user.email}</span>
-                    </div>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => navigate("/profile")}>
-                    <User className="mr-2 h-4 w-4" />
-                    <span>Profile</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => navigate("/progress")}>
-                    <Award className="mr-2 h-4 w-4" />
-                    <span>My Progress</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleLogout}>
-                    <LogOut className="mr-2 h-4 w-4" />
-                    <span>Logout</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <div className="flex space-x-2">
-                <Button variant="outline" onClick={() => navigate("/login")}>
-                  Log in
-                </Button>
-                <Button onClick={() => navigate("/register")}>Sign up</Button>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile menu */}
-      <div className={`md:hidden ${mobileMenuOpen ? "block" : "hidden"}`}>
-        <div className="px-2 pt-2 pb-3 space-y-1 border-t border-border">
+        <div className="flex items-center space-x-6">
           {navItems.map((item) => (
             <Link
-              key={item.name}
-              to={item.path}
-              className="flex items-center px-3 py-2 rounded-md text-base font-medium hover:bg-accent hover:text-accent-foreground"
-              onClick={() => setMobileMenuOpen(false)}
+              key={item.title}
+              to={item.href}
+              className={`text-muted-foreground hover:text-foreground transition-colors ${
+                isActive(item.href) ? "text-foreground font-medium" : ""
+              }`}
             >
-              {item.icon}
-              {item.name}
+              {item.title}
             </Link>
           ))}
+
           {user ? (
             <>
               <Link
                 to="/profile"
-                className="flex items-center px-3 py-2 rounded-md text-base font-medium hover:bg-accent hover:text-accent-foreground"
-                onClick={() => setMobileMenuOpen(false)}
+                className="text-muted-foreground hover:text-foreground transition-colors"
               >
-                <User className="h-5 w-5 mr-2" />
                 Profile
               </Link>
-              <button
-                onClick={() => {
-                  handleLogout();
-                  setMobileMenuOpen(false);
-                }}
-                className="flex w-full items-center px-3 py-2 rounded-md text-base font-medium hover:bg-accent hover:text-accent-foreground"
-              >
-                <LogOut className="h-5 w-5 mr-2" />
+              <Button variant="outline" size="sm" onClick={logout}>
                 Logout
-              </button>
+              </Button>
             </>
           ) : (
-            <div className="flex flex-col space-y-2 px-3 py-2">
-              <Button
-                variant="outline"
-                onClick={() => {
-                  navigate("/login");
-                  setMobileMenuOpen(false);
-                }}
+            <>
+              <Link
+                to="/login"
+                className="text-muted-foreground hover:text-foreground transition-colors"
               >
-                Log in
-              </Button>
-              <Button
-                onClick={() => {
-                  navigate("/register");
-                  setMobileMenuOpen(false);
-                }}
+                Login
+              </Link>
+              <Link
+                to="/register"
+                className="text-muted-foreground hover:text-foreground transition-colors"
               >
-                Sign up
-              </Button>
-            </div>
+                Register
+              </Link>
+            </>
           )}
         </div>
       </div>

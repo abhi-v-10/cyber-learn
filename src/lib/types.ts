@@ -76,3 +76,11 @@ export interface LearningPath {
   difficulty: 'beginner' | 'intermediate' | 'advanced';
   category: string;
 }
+
+export interface Tool {
+  id: string;
+  title: string;
+  description: string;
+  type: 'password' | 'phishing' | 'encryption';
+  component: string;
+}
