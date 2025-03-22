@@ -11,6 +11,7 @@ export const api = {
         id: "1",
         email: email,
         name: "John Doe",
+        username: "johndoe", // Added username property
         createdAt: new Date(),
         progress: {
           level: 1,
@@ -32,6 +33,7 @@ export const api = {
         id: "1",
         email: email,
         name: name,
+        username: email.split('@')[0], // Added username using part of email
         createdAt: new Date(),
         progress: {
           level: 1,
@@ -59,6 +61,7 @@ export const api = {
         id: "1",
         email: "john.doe@example.com",
         name: "John Doe",
+        username: "johndoe", // Added username
         createdAt: new Date(),
         progress: {
           level: 1,

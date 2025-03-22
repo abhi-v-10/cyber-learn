@@ -12,6 +12,7 @@ interface AuthContextType {
   register: (email: string, password: string, username: string) => Promise<void>;
   logout: () => Promise<void>;
   updateProfile: (updates: Partial<User>) => Promise<void>;
+  updateProgress: (progressUpdates: Partial<User['progress']>) => Promise<void>;
   session: Session | null;
 }
 
@@ -168,6 +169,29 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const updateProgress = async (progressUpdates: Partial<User['progress']>) => {
+    if (!user) return;
+    
+    try {
+      // Update local user state with progress updates
+      const updatedProgress = {
+        ...user.progress,
+        ...progressUpdates
+      };
+      
+      // Here you would usually update the progress in the database
+      // For now, we just update the local state
+      setUser({
+        ...user,
+        progress: updatedProgress
+      });
+      
+      toast.success('Progress updated successfully');
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to update progress');
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -177,6 +201,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         register,
         logout,
         updateProfile,
+        updateProgress,
         session
       }}
     >
