@@ -1,4 +1,4 @@
-import { Course, Quiz, User, UserProgress } from "./types";
+import { Course, Quiz, User, UserProgress, Tool, ChatMessage } from "./types";
 
 // Mock user data
 const mockUser: User = {
@@ -290,6 +290,31 @@ const mockCourses: Course[] = [
   }
 ];
 
+// Mock tools data
+const mockTools: Tool[] = [
+  {
+    id: "1",
+    title: "Password Strength Analyzer",
+    description: "Check the strength of your passwords and learn how to create more secure ones.",
+    type: "password",
+    component: "PasswordAnalyzer"
+  },
+  {
+    id: "2",
+    title: "Phishing URL Detector",
+    description: "Analyze URLs to identify potential phishing attempts and learn how to spot them.",
+    type: "phishing",
+    component: "PhishingDetector"
+  },
+  {
+    id: "3",
+    title: "Encryption Playground",
+    description: "Experiment with different encryption techniques to understand how they protect data.",
+    type: "encryption",
+    component: "EncryptionPlayground"
+  }
+];
+
 export const api = {
   auth: {
     login: async (email: string, password: string): Promise<User> => {
@@ -344,6 +369,44 @@ export const api = {
     getById: async (id: string): Promise<Quiz | undefined> => {
       return Promise.resolve(mockQuizzes.find((quiz) => quiz.id === id));
     },
+    submitQuiz: async (quizId: string, answers: number[], userId: string): Promise<{
+      score: number;
+      passed: boolean;
+      feedback: string[];
+    }> => {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      
+      const quiz = mockQuizzes.find(q => q.id === quizId);
+      
+      if (!quiz) {
+        throw new Error("Quiz not found");
+      }
+      
+      const feedbackArray: string[] = [];
+      let correctAnswers = 0;
+      
+      quiz.questions.forEach((question, index) => {
+        const userAnswer = answers[index];
+        const isCorrect = userAnswer === question.correctAnswer;
+        
+        if (isCorrect) {
+          correctAnswers++;
+          feedbackArray.push(`Question ${index + 1}: Correct! ${question.explanation}`);
+        } else {
+          feedbackArray.push(`Question ${index + 1}: Incorrect. The correct answer was "${question.options[question.correctAnswer]}". ${question.explanation}`);
+        }
+      });
+      
+      const score = (correctAnswers / quiz.questions.length) * 100;
+      const passed = score >= 80; // 80% passing threshold
+      
+      return {
+        score,
+        passed,
+        feedback: feedbackArray
+      };
+    }
   },
   progress: {
     get: async (userId: string): Promise<UserProgress> => {
@@ -358,4 +421,33 @@ export const api = {
       return Promise.resolve(mockUser.progress);
     },
   },
+  tools: {
+    getAll: async (): Promise<Tool[]> => {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 800));
+      return Promise.resolve(mockTools);
+    },
+    getById: async (id: string): Promise<Tool | undefined> => {
+      return Promise.resolve(mockTools.find((tool) => tool.id === id));
+    }
+  },
+  chatbot: {
+    sendMessage: async (message: string, previousMessages: ChatMessage[]): Promise<string> => {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      
+      // Simple mock responses based on message content
+      if (message.toLowerCase().includes("password")) {
+        return "Strong passwords are critical in cybersecurity. Use a mix of uppercase and lowercase letters, numbers, and special characters. Aim for at least 12 characters and avoid using personal information or common words.";
+      } else if (message.toLowerCase().includes("phishing")) {
+        return "Phishing attacks try to trick you into revealing sensitive information. Always verify the sender's email address, be suspicious of urgent requests, check for spelling errors, and never click on suspicious links. Instead, go directly to the official website by typing the URL yourself.";
+      } else if (message.toLowerCase().includes("encryption")) {
+        return "Encryption is the process of converting data into a code to prevent unauthorized access. Common encryption types include symmetric encryption (using one key) and asymmetric encryption (using public and private keys). HTTPS, VPNs, and encrypted messaging apps all use encryption to protect your data.";
+      } else if (message.toLowerCase().includes("network")) {
+        return "Network security involves practices designed to protect the integrity, confidentiality, and accessibility of computer networks and data. This includes technologies like firewalls, intrusion detection systems, VPNs, and security protocols. Regular audits and updates are essential for maintaining network security.";
+      } else {
+        return "That's an interesting cybersecurity question. In this field, continuous learning is essential as threats and technologies evolve rapidly. Consider exploring official resources like NIST, OWASP, or taking courses in specific areas you're interested in to deepen your knowledge.";
+      }
+    }
+  }
 };
