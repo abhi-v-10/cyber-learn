@@ -319,10 +319,262 @@ const createWebSecurityQuiz = (): Quiz => {
   };
 };
 
+const createCryptographyQuiz = (): Quiz => {
+  return {
+    id: "4",
+    title: "Cryptography and Encryption",
+    description: "Test your understanding of cryptographic principles and encryption techniques.",
+    imageUrl: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=2070&auto=format&fit=crop",
+    category: "Cryptography",
+    difficulty: "intermediate",
+    questions: [
+      {
+        id: "4-1",
+        question: "Which of the following is a symmetric encryption algorithm?",
+        options: ["RSA", "AES", "ECC", "Diffie-Hellman"],
+        correctAnswer: 1,
+        explanation: "AES (Advanced Encryption Standard) is a symmetric encryption algorithm that uses the same key for both encryption and decryption."
+      },
+      {
+        id: "4-2",
+        question: "What is the primary purpose of a hash function in cryptography?",
+        options: ["Encrypt data", "Generate secure keys", "Create one-way digests of data", "Authenticate users"],
+        correctAnswer: 2,
+        explanation: "Hash functions create fixed-length, one-way digests of data that are used for integrity checking and password storage."
+      },
+      {
+        id: "4-3",
+        question: "Which of the following cryptographic concepts allows secure key exchange over an insecure channel?",
+        options: ["Symmetric encryption", "Hashing", "Digital signatures", "Diffie-Hellman key exchange"],
+        correctAnswer: 3,
+        explanation: "The Diffie-Hellman key exchange protocol allows two parties to securely generate a shared secret key over an insecure communication channel."
+      },
+      {
+        id: "4-4",
+        question: "What is a digital certificate used for?",
+        options: ["Encrypting files", "Binding a public key to an identity", "Creating digital signatures", "Generating random numbers"],
+        correctAnswer: 1,
+        explanation: "Digital certificates bind a public key to an identity, allowing users to verify they are communicating with the intended party."
+      },
+      {
+        id: "4-5",
+        question: "Which of these is NOT a common mode of operation for block ciphers?",
+        options: ["CBC (Cipher Block Chaining)", "ECB (Electronic Codebook)", "CTR (Counter)", "RSA (Rivest-Shamir-Adleman)"],
+        correctAnswer: 3,
+        explanation: "RSA is an asymmetric encryption algorithm, not a mode of operation for block ciphers. CBC, ECB, and CTR are all valid modes of operation."
+      },
+      {
+        id: "4-6",
+        question: "What is the purpose of a salt in password hashing?",
+        options: ["To make passwords taste better", "To increase password complexity", "To prevent dictionary attacks", "To make password storage more compact"],
+        correctAnswer: 2,
+        explanation: "A salt is random data added to a password before hashing to ensure that identical passwords don't produce the same hash, preventing dictionary attacks and rainbow table attacks."
+      },
+      {
+        id: "4-7",
+        question: "Which of the following best describes asymmetric encryption?",
+        options: ["Uses the same key for encryption and decryption", "Is faster than symmetric encryption", "Uses a key pair (public and private)", "Can only encrypt small amounts of data"],
+        correctAnswer: 2,
+        explanation: "Asymmetric encryption uses a key pair - a public key for encryption and a private key for decryption, allowing secure communication without prior key exchange."
+      },
+      {
+        id: "4-8",
+        question: "What is a side-channel attack in cryptography?",
+        options: ["An attack that uses multiple servers", "An attack based on information gained from the physical implementation of a system", "An attack through alternative communication channels", "An attack on peripheral devices"],
+        correctAnswer: 1,
+        explanation: "Side-channel attacks exploit information gained from the physical implementation of a cryptosystem, such as timing information, power consumption, or electromagnetic leaks."
+      },
+      {
+        id: "4-9",
+        question: "What does Perfect Forward Secrecy (PFS) provide?",
+        options: ["Unbreakable encryption", "Protection of past communications even if long-term keys are compromised", "The ability to decrypt all future communications", "Security against quantum computing attacks"],
+        correctAnswer: 1,
+        explanation: "Perfect Forward Secrecy ensures that session keys will not be compromised even if the long-term keys are compromised. Each session uses a different key derived independently."
+      },
+      {
+        id: "4-10",
+        question: "Which algorithm is specifically designed for secure password hashing?",
+        options: ["MD5", "SHA-256", "Bcrypt", "AES-256"],
+        correctAnswer: 2,
+        explanation: "Bcrypt is specifically designed for password hashing, incorporating a salt and being deliberately slow to compute to resist brute force attacks."
+      }
+    ],
+  };
+};
+
+const createSocialEngineeringQuiz = (): Quiz => {
+  return {
+    id: "5",
+    title: "Social Engineering Tactics",
+    description: "Learn to identify and counter various social engineering techniques.",
+    imageUrl: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070&auto=format&fit=crop",
+    category: "Human Security",
+    difficulty: "beginner",
+    questions: [
+      {
+        id: "5-1",
+        question: "What is phishing?",
+        options: ["A secure coding technique", "A method of fishing for information online", "An attack that tricks users into revealing sensitive information", "A type of encryption"],
+        correctAnswer: 2,
+        explanation: "Phishing is a social engineering attack where attackers impersonate trusted entities to trick users into revealing sensitive information such as credentials or financial details."
+      },
+      {
+        id: "5-2",
+        question: "Which of these is an example of a pretexting attack?",
+        options: ["Sending emails with malicious attachments", "Creating a false scenario to obtain information", "Using a fake website to collect credentials", "Installing malware through USB drives"],
+        correctAnswer: 1,
+        explanation: "Pretexting involves creating a fabricated scenario (a pretext) to engage a victim and make them divulge information or perform actions they normally wouldn't."
+      },
+      {
+        id: "5-3",
+        question: "What is tailgating in the context of physical security?",
+        options: ["Following someone closely in a vehicle", "Following an authorized person through a secure entry point", "Installing unauthorized software", "Monitoring someone's computer usage"],
+        correctAnswer: 1,
+        explanation: "Tailgating (or piggybacking) occurs when an unauthorized person follows an authorized person through a secure entry point, bypassing physical access controls."
+      },
+      {
+        id: "5-4",
+        question: "What is the primary goal of a baiting attack?",
+        options: ["To exploit curiosity or greed", "To create fear or urgency", "To establish false authority", "To build a relationship with the target"],
+        correctAnswer: 0,
+        explanation: "Baiting attacks exploit human curiosity or greed by offering something enticing (like a free USB drive) that contains malware or leads to security compromise."
+      },
+      {
+        id: "5-5",
+        question: "Which social engineering technique relies on inducing a sense of urgency or fear?",
+        options: ["Baiting", "Phishing", "Scareware", "Quid pro quo"],
+        correctAnswer: 2,
+        explanation: "Scareware uses fear tactics to manipulate users, typically by falsely claiming a security issue exists and offering a fake solution that actually compromises security."
+      },
+      {
+        id: "5-6",
+        question: "What is the best defense against social engineering attacks?",
+        options: ["Advanced firewalls", "Strong encryption", "Employee awareness and training", "Complex passwords"],
+        correctAnswer: 2,
+        explanation: "While technical controls are important, the most effective defense against social engineering is well-trained employees who can recognize and properly respond to social engineering attempts."
+      },
+      {
+        id: "5-7",
+        question: "What is vishing?",
+        options: ["Video phishing using fake video calls", "Voice phishing using phone calls", "Vehicle phishing targeting car computer systems", "Virtual phishing in online games"],
+        correctAnswer: 1,
+        explanation: "Vishing (voice phishing) uses phone calls to deceive people into revealing sensitive information or making security mistakes by impersonating legitimate entities."
+      },
+      {
+        id: "5-8",
+        question: "In social engineering, what is 'elicitation'?",
+        options: ["Using threats to extract information", "Tricking someone into installing malware", "Subtly drawing out information through conversation", "Creating false documentation"],
+        correctAnswer: 2,
+        explanation: "Elicitation is the subtle extraction of information during normal, seemingly innocent conversation, without raising suspicion that information gathering is taking place."
+      },
+      {
+        id: "5-9",
+        question: "What psychological principle do many social engineering attacks exploit?",
+        options: ["Authority", "Conformity", "Reciprocity", "All of the above"],
+        correctAnswer: 3,
+        explanation: "Social engineering attacks exploit multiple psychological principles including authority (tendency to obey authority figures), conformity (desire to fit in), and reciprocity (feeling obligated to return favors)."
+      },
+      {
+        id: "5-10",
+        question: "What is spear phishing?",
+        options: ["Phishing using SMS messages", "Targeted phishing attacks customized for specific individuals", "Mass phishing campaigns", "Phishing through social media only"],
+        correctAnswer: 1,
+        explanation: "Spear phishing refers to highly targeted phishing attacks that are customized for specific individuals or organizations, using personalized information to increase credibility."
+      }
+    ],
+  };
+};
+
+const createIncidentResponseQuiz = (): Quiz => {
+  return {
+    id: "6",
+    title: "Incident Response and Forensics",
+    description: "Evaluate your knowledge of cyber incident handling and digital forensics procedures.",
+    imageUrl: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop",
+    category: "Security Operations",
+    difficulty: "advanced",
+    questions: [
+      {
+        id: "6-1",
+        question: "What is the first phase of the incident response lifecycle?",
+        options: ["Detection and Analysis", "Preparation", "Containment", "Eradication"],
+        correctAnswer: 1,
+        explanation: "Preparation is the first phase of incident response, involving developing an incident handling capability and preventing incidents by securing systems properly."
+      },
+      {
+        id: "6-2",
+        question: "What is the primary purpose of the 'chain of custody' in digital forensics?",
+        options: ["To ensure data is properly backed up", "To document who had possession of evidence and when", "To establish network security protocols", "To determine the sequence of a cyber attack"],
+        correctAnswer: 1,
+        explanation: "Chain of custody documents the chronological paper trail showing the seizure, custody, control, transfer, and disposition of evidence, ensuring its integrity for legal proceedings."
+      },
+      {
+        id: "6-3",
+        question: "Which of the following best describes the concept of 'live forensics'?",
+        options: ["Examining running systems without shutting them down", "Analyzing only the most recent data", "Remote forensic analysis over a network", "Using automated forensic tools"],
+        correctAnswer: 0,
+        explanation: "Live forensics involves capturing and analyzing volatile data from running systems, such as RAM contents, network connections, and running processes before powering down the system."
+      },
+      {
+        id: "6-4",
+        question: "What is a 'forensic image' in digital investigations?",
+        options: ["A screenshot of the compromised system", "A photograph of the physical computer", "A bit-by-bit copy of digital media", "A diagram of the attack path"],
+        correctAnswer: 2,
+        explanation: "A forensic image is a bit-by-bit copy of the original digital media, including all files, folders and unallocated space, created to preserve evidence while preventing alteration of the original."
+      },
+      {
+        id: "6-5",
+        question: "During incident response, what is the purpose of the containment phase?",
+        options: ["To identify the attack vector", "To limit the damage from the incident", "To restore systems to normal operation", "To document lessons learned"],
+        correctAnswer: 1,
+        explanation: "The containment phase aims to limit the damage from the incident and prevent further damage, often involving isolating affected systems to prevent lateral movement by attackers."
+      },
+      {
+        id: "6-6",
+        question: "What is a 'write blocker' used for in digital forensics?",
+        options: ["Preventing unauthorized access to case files", "Preventing changes to evidence during acquisition", "Blocking attackers from writing to a system", "Encrypting forensic reports"],
+        correctAnswer: 1,
+        explanation: "A write blocker is a hardware device or software tool that prevents any data from being written to the storage media being examined, preserving the integrity of the original evidence."
+      },
+      {
+        id: "6-7",
+        question: "What does the acronym 'IOC' stand for in incident response?",
+        options: ["Incident Operation Center", "Integration of Controls", "Indicators of Compromise", "Internet Operation Command"],
+        correctAnswer: 2,
+        explanation: "IOC stands for Indicators of Compromise, which are artifacts observed on a network or in an operating system that indicate a high likelihood of a security breach."
+      },
+      {
+        id: "6-8",
+        question: "Which of the following is NOT typically included in a forensic investigation report?",
+        options: ["Description of the evidence examined", "Chain of custody documentation", "Tools and methods used", "Personal opinions about the suspect's guilt"],
+        correctAnswer: 3,
+        explanation: "Personal opinions about guilt should not be included in forensic reports. Reports should be factual, objective, and focus on the evidence found, methodologies used, and technical conclusions."
+      },
+      {
+        id: "6-9",
+        question: "What is the purpose of a 'tabletop exercise' in incident response?",
+        options: ["To practice incident response procedures without actual incidents", "To physically secure computers to tables", "To organize incident response tools", "To test network monitoring systems"],
+        correctAnswer: 0,
+        explanation: "Tabletop exercises are discussion-based sessions where team members work through simulated incident scenarios to practice coordination, communication, and decision-making during an incident."
+      },
+      {
+        id: "6-10",
+        question: "What is 'data carving' in digital forensics?",
+        options: ["Physically breaking open storage devices", "Extracting files from unallocated space based on file signatures", "Removing sensitive data from reports", "Creating partitions on storage media"],
+        correctAnswer: 1,
+        explanation: "Data carving is the process of extracting data from a disk or memory dump by scanning for file signatures or patterns, allowing recovery of files even when file system metadata is missing or damaged."
+      }
+    ],
+  };
+};
+
 const mockQuizzes: Quiz[] = [
   createBasicNetworkSecurityQuiz(),
   createEthicalHackingQuiz(),
   createWebSecurityQuiz(),
+  createCryptographyQuiz(),
+  createSocialEngineeringQuiz(),
+  createIncidentResponseQuiz(),
 ];
 
 // Enhance mock courses with detailed study materials
@@ -544,7 +796,7 @@ const mockCourses: Course[] = [
     id: "7",
     title: "Cryptography for Cybersecurity",
     description: "Understand modern cryptographic algorithms and protocols and learn how to implement them correctly.",
-    imageUrl: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=2034&auto=format&fit=crop",
+    imageUrl: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=2070&auto=format&fit=crop",
     difficulty: "intermediate" as const,
     topics: [
       {
