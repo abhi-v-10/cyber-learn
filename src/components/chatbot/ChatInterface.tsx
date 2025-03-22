@@ -6,8 +6,11 @@ import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Loader, Send } from "lucide-react";
 import { ChatMessage } from "@/lib/types";
-import { api } from "@/lib/api";
 import Markdown from "react-markdown";
+
+// Gemini API info
+const GEMINI_API_KEY = "AIzaSyDzOoVej0pvx85JzW2a3EU0UmWfHriGTo8";
+const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent";
 
 export const ChatInterface: React.FC = () => {
   const [input, setInput] = useState("");
@@ -15,7 +18,7 @@ export const ChatInterface: React.FC = () => {
     {
       id: "welcome",
       role: "assistant",
-      content: "Hello! I'm your Cybersecurity AI Tutor. Ask me anything about cybersecurity, ethical hacking, network security, or any other topic you're learning about.",
+      content: "Hello! I'm your Cybersecurity AI Tutor powered by Google's Gemini AI. Ask me anything about cybersecurity, ethical hacking, network security, or any other cybersecurity topic you're learning about.",
       timestamp: new Date()
     }
   ]);
@@ -45,15 +48,71 @@ export const ChatInterface: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const response = await api.chatbot.sendMessage(
-        input,
-        messages
-      );
+      // Call Gemini API
+      const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          contents: [
+            {
+              role: "user",
+              parts: [
+                {
+                  text: `You are a cybersecurity expert assistant. Answer the following question in a helpful, accurate, and concise way, focusing on cybersecurity topics: ${input}`
+                }
+              ]
+            }
+          ],
+          generationConfig: {
+            temperature: 0.7,
+            topK: 40,
+            topP: 0.95,
+            maxOutputTokens: 1024,
+          },
+          safetySettings: [
+            {
+              category: "HARM_CATEGORY_HARASSMENT",
+              threshold: "BLOCK_ONLY_HIGH"
+            },
+            {
+              category: "HARM_CATEGORY_HATE_SPEECH",
+              threshold: "BLOCK_ONLY_HIGH"
+            },
+            {
+              category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+              threshold: "BLOCK_ONLY_HIGH"
+            },
+            {
+              category: "HARM_CATEGORY_DANGEROUS_CONTENT",
+              threshold: "BLOCK_ONLY_HIGH"
+            }
+          ]
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`API request failed with status ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("Gemini API response:", data);
+
+      let assistantResponse = "";
+      if (data.candidates && data.candidates.length > 0 && 
+          data.candidates[0].content && 
+          data.candidates[0].content.parts && 
+          data.candidates[0].content.parts.length > 0) {
+        assistantResponse = data.candidates[0].content.parts[0].text;
+      } else {
+        assistantResponse = "I apologize, but I couldn't generate a response. Please try asking a different question.";
+      }
 
       const assistantMessage: ChatMessage = {
         id: `assistant-${Date.now()}`,
         role: "assistant",
-        content: response,
+        content: assistantResponse,
         timestamp: new Date()
       };
 
@@ -64,7 +123,7 @@ export const ChatInterface: React.FC = () => {
       const errorMessage: ChatMessage = {
         id: `error-${Date.now()}`,
         role: "assistant",
-        content: "I'm sorry, I encountered an error processing your request. Please try again later.",
+        content: "I'm sorry, I encountered an error processing your request. Please check your network connection and try again later.",
         timestamp: new Date()
       };
       

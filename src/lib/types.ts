@@ -36,6 +36,20 @@ export interface CourseTopic {
   content: string;
   imageUrl?: string;
   resources?: Resource[];
+  importantNotes?: Note[];
+  studyMaterials?: string;
+  practiceQuestions?: PracticeQuestion[];
+}
+
+export interface Note {
+  title: string;
+  content: string;
+  type: 'info' | 'warning';
+}
+
+export interface PracticeQuestion {
+  question: string;
+  answer: string;
 }
 
 export interface Resource {

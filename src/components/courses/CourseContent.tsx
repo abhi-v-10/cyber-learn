@@ -3,8 +3,11 @@ import React, { useState } from "react";
 import { Course, CourseTopic } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ChevronLeft, ChevronRight, BookOpen } from "lucide-react";
+import { ChevronLeft, ChevronRight, BookOpen, NotebookPen, ExternalLink, FileQuestion } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Markdown from "react-markdown";
 
 interface CourseContentProps {
@@ -56,6 +59,9 @@ export const CourseContent: React.FC<CourseContentProps> = ({ course }) => {
       <Tabs defaultValue="content" className="w-full">
         <TabsList className="mb-4">
           <TabsTrigger value="content">Course Content</TabsTrigger>
+          <TabsTrigger value="notes">Important Notes</TabsTrigger>
+          <TabsTrigger value="study">Study Materials</TabsTrigger>
+          <TabsTrigger value="practice">Practice Area</TabsTrigger>
           <TabsTrigger value="resources">Resources</TabsTrigger>
         </TabsList>
         
@@ -111,6 +117,76 @@ export const CourseContent: React.FC<CourseContentProps> = ({ course }) => {
               <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
+        </TabsContent>
+        
+        <TabsContent value="notes" className="space-y-4">
+          {activeTopic.importantNotes && activeTopic.importantNotes.length > 0 ? (
+            <div className="space-y-4">
+              {activeTopic.importantNotes.map((note, index) => (
+                <Alert key={index} className={note.type === "warning" ? "border-yellow-500" : "border-blue-500"}>
+                  <NotebookPen className={`h-4 w-4 ${note.type === "warning" ? "text-yellow-500" : "text-blue-500"}`} />
+                  <AlertTitle className="font-semibold">{note.title}</AlertTitle>
+                  <AlertDescription>
+                    {note.content}
+                  </AlertDescription>
+                </Alert>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-muted-foreground">No important notes available for this topic.</p>
+            </div>
+          )}
+        </TabsContent>
+        
+        <TabsContent value="study" className="space-y-4">
+          {activeTopic.studyMaterials ? (
+            <div className="bg-card rounded-lg border overflow-hidden">
+              <div className="p-6">
+                <h3 className="text-xl font-semibold mb-4">Detailed Study Materials</h3>
+                <div className="prose max-w-none">
+                  <Markdown>{activeTopic.studyMaterials}</Markdown>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-muted-foreground">No additional study materials available for this topic.</p>
+            </div>
+          )}
+        </TabsContent>
+        
+        <TabsContent value="practice" className="space-y-4">
+          {activeTopic.practiceQuestions && activeTopic.practiceQuestions.length > 0 ? (
+            <div className="bg-card rounded-lg border overflow-hidden">
+              <div className="p-6">
+                <h3 className="text-xl font-semibold mb-4">Practice Questions</h3>
+                <div className="space-y-6">
+                  {activeTopic.practiceQuestions.map((question, index) => (
+                    <Card key={index} className="border border-muted">
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-base">Question {index + 1}</CardTitle>
+                        <CardDescription>{question.question}</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <Button variant="outline" size="sm" className="mb-2">
+                          Show Answer
+                        </Button>
+                        <div className="text-sm text-muted-foreground hidden">
+                          <p className="font-medium">Answer:</p>
+                          <p>{question.answer}</p>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-muted-foreground">No practice questions available for this topic.</p>
+            </div>
+          )}
         </TabsContent>
         
         <TabsContent value="resources" className="space-y-4">
@@ -179,6 +255,7 @@ export const CourseContent: React.FC<CourseContentProps> = ({ course }) => {
                           <div className="font-medium">{resource.title}</div>
                           <div className="text-xs text-muted-foreground">{resource.type}</div>
                         </div>
+                        <ExternalLink className="h-4 w-4 ml-auto text-muted-foreground" />
                       </a>
                     </li>
                   ))}

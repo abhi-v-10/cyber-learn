@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Quiz } from "@/lib/types";
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,12 @@ export const QuizContent: React.FC<QuizContentProps> = ({ quiz }) => {
     score: number;
     passed: boolean;
     feedback: string[];
+    incorrectAnswers: {
+      questionIndex: number;
+      userAnswer: number;
+      correctAnswer: number;
+      explanation: string;
+    }[];
   } | null>(null);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
 
@@ -75,12 +82,26 @@ export const QuizContent: React.FC<QuizContentProps> = ({ quiz }) => {
       if (result.passed) {
         toast.success("Congratulations! You passed the quiz!");
         
+        // Calculate new title based on completed quizzes
+        const getTitleForQuizCount = (quizCount: number): string => {
+          if (quizCount < 25) return "Rookie";
+          if (quizCount < 50) return "Learner";
+          if (quizCount < 75) return "Dedicated";
+          if (quizCount < 100) return "Master";
+          return "Expert";
+        };
+        
         // Update user progress
         const completedQuizzes = user.progress.completedQuizzes || [];
         if (!completedQuizzes.includes(quiz.id)) {
+          const newCompletedQuizzes = [...completedQuizzes, quiz.id];
+          const newTitle = getTitleForQuizCount(newCompletedQuizzes.length);
+          
           await updateProgress({
-            completedQuizzes: [...completedQuizzes, quiz.id],
-            points: user.progress.points + 10
+            completedQuizzes: newCompletedQuizzes,
+            points: user.progress.points + 10,
+            title: newTitle,
+            level: Math.floor(newCompletedQuizzes.length / 25) + 1
           });
         }
       } else {
@@ -248,6 +269,34 @@ export const QuizContent: React.FC<QuizContentProps> = ({ quiz }) => {
                   })}
                 </div>
               </div>
+
+              {quizResult && quizResult.incorrectAnswers && quizResult.incorrectAnswers.length > 0 && (
+                <div className="space-y-4">
+                  <h4 className="text-lg font-semibold">Incorrect Answers</h4>
+                  <div className="space-y-4">
+                    {quizResult.incorrectAnswers.map((item, index) => (
+                      <Card key={index} className="border-red-100">
+                        <CardContent className="p-4">
+                          <h5 className="font-medium mb-2">
+                            Question {item.questionIndex + 1}: {quiz.questions[item.questionIndex].question}
+                          </h5>
+                          <div className="space-y-2 ml-4">
+                            <p className="text-red-600">
+                              Your answer: {quiz.questions[item.questionIndex].options[item.userAnswer]}
+                            </p>
+                            <p className="text-green-600">
+                              Correct answer: {quiz.questions[item.questionIndex].options[item.correctAnswer]}
+                            </p>
+                            <p className="text-sm text-muted-foreground mt-2">
+                              Explanation: {item.explanation}
+                            </p>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
 

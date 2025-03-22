@@ -28,7 +28,17 @@ export const ProgressStats: React.FC<ProgressStatsProps> = ({
     ? (completedQuizzesCount / totalQuizzesCount) * 100 
     : 0;
 
-  const nextTitleThreshold = Math.ceil(completedQuizzesCount / 25) * 25;
+  // Calculate the next title based on completed quizzes
+  const getTitleForQuizCount = (quizCount: number): string => {
+    if (quizCount < 25) return "Rookie";
+    if (quizCount < 50) return "Learner";
+    if (quizCount < 75) return "Dedicated";
+    if (quizCount < 100) return "Master";
+    return "Expert";
+  };
+
+  const nextTitle = getTitleForQuizCount(completedQuizzesCount + 25);
+  const nextTitleThreshold = Math.ceil((completedQuizzesCount + 1) / 25) * 25;
   const nextTitleProgress = ((completedQuizzesCount % 25) / 25) * 100;
 
   return (
@@ -68,7 +78,7 @@ export const ProgressStats: React.FC<ProgressStatsProps> = ({
           <div className="text-2xl font-bold">{user.progress.title}</div>
           <div className="mt-2 space-y-1">
             <p className="text-xs text-muted-foreground">
-              Next: {nextTitleThreshold - completedQuizzesCount} more quizzes for next title
+              Next: {nextTitleThreshold - completedQuizzesCount} more quizzes for {nextTitle}
             </p>
             <Progress value={nextTitleProgress} className="h-1" />
           </div>
