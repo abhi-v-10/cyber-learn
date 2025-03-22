@@ -417,7 +417,7 @@ const mockCourses: Course[] = [
           {
             title: "NIST Cybersecurity Framework",
             url: "https://www.nist.gov/cyberframework",
-            type: "article"
+            type: "article" as const
           }
         ]
       }
@@ -440,7 +440,7 @@ const mockCourses: Course[] = [
           {
             title: "Firewall Best Practices",
             url: "https://www.cisco.com/c/en/us/support/docs/security/asa-5500-x-series-firewalls/200191-Security-Best-Practices-for-the-ASA.html",
-            type: "article"
+            type: "article" as const
           }
         ]
       }
@@ -463,7 +463,7 @@ const mockCourses: Course[] = [
           {
             title: "OSINT Framework",
             url: "https://osintframework.com/",
-            type: "tool"
+            type: "tool" as const
           }
         ]
       }
@@ -486,7 +486,7 @@ const mockCourses: Course[] = [
           {
             title: "OWASP Input Validation Cheat Sheet",
             url: "https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html",
-            type: "article"
+            type: "article" as const
           }
         ]
       }
@@ -509,7 +509,7 @@ const mockCourses: Course[] = [
           {
             title: "Cloud Security Alliance",
             url: "https://cloudsecurityalliance.org/",
-            type: "article"
+            type: "article" as const
           }
         ]
       }
@@ -532,7 +532,7 @@ const mockCourses: Course[] = [
           {
             title: "OWASP Mobile Top 10",
             url: "https://owasp.org/www-project-mobile-top-10/",
-            type: "article"
+            type: "article" as const
           }
         ]
       }
@@ -555,7 +555,7 @@ const mockCourses: Course[] = [
           {
             title: "Cryptography 101",
             url: "https://www.tutorialspoint.com/cryptography/index.htm",
-            type: "article"
+            type: "article" as const
           }
         ]
       }
@@ -578,7 +578,7 @@ const mockCourses: Course[] = [
           {
             title: "Anti-Phishing Training",
             url: "https://www.phishing.org/phishing-resources",
-            type: "article"
+            type: "article" as const
           }
         ]
       }
@@ -601,7 +601,7 @@ const mockCourses: Course[] = [
           {
             title: "SOC Fundamentals",
             url: "https://www.sans.org/reading-room/whitepapers/analyst/building-maintaining-security-operations-center-35907",
-            type: "article"
+            type: "article" as const
           }
         ]
       }
@@ -624,7 +624,7 @@ const mockCourses: Course[] = [
           {
             title: "OWASP IoT Top 10",
             url: "https://owasp.org/www-project-internet-of-things/",
-            type: "article"
+            type: "article" as const
           }
         ]
       }
