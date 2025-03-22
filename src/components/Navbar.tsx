@@ -1,8 +1,11 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { useLocation } from 'react-router-dom';
+import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export const Navbar = () => {
   const { user, logout } = useAuth();
@@ -28,7 +31,7 @@ export const Navbar = () => {
           CyberLearn
         </Link>
 
-        <div className="flex items-center space-x-6">
+        <div className="hidden md:flex items-center space-x-6">
           {navItems.map((item) => (
             <Link
               key={item.title}
@@ -40,34 +43,40 @@ export const Navbar = () => {
               {item.title}
             </Link>
           ))}
+        </div>
 
+        <div className="flex items-center space-x-4">
+          <ThemeToggle />
+          
           {user ? (
-            <>
+            <div className="flex items-center space-x-4">
               <Link
                 to="/profile"
-                className="text-muted-foreground hover:text-foreground transition-colors"
+                className="flex items-center space-x-2"
               >
-                Profile
+                <Avatar className="h-8 w-8">
+                  <AvatarFallback className="bg-primary text-primary-foreground">
+                    {user.name?.substring(0, 2).toUpperCase() || "U"}
+                  </AvatarFallback>
+                </Avatar>
+                <span className="text-sm font-medium hidden md:inline">{user.name}</span>
               </Link>
-              <Button variant="outline" size="sm" onClick={logout}>
+              <Button variant="outline" size="sm" onClick={logout} className="hidden md:flex">
                 Logout
               </Button>
-            </>
+            </div>
           ) : (
-            <>
+            <div className="flex items-center space-x-4">
               <Link
                 to="/login"
                 className="text-muted-foreground hover:text-foreground transition-colors"
               >
                 Login
               </Link>
-              <Link
-                to="/register"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Register
+              <Link to="/register">
+                <Button size="sm" variant="default">Register</Button>
               </Link>
-            </>
+            </div>
           )}
         </div>
       </div>
