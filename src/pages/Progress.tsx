@@ -1,8 +1,7 @@
-
 import React, { useEffect, useState } from "react";
 import { Layout } from "@/components/Layout";
 import { ProgressStats } from "@/components/progress/ProgressStats";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context/auth";
 import { api } from "@/lib/api";
 import { Course, Quiz } from "@/lib/types";
 import { CoursesList } from "@/components/courses/CoursesList";

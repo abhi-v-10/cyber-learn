@@ -1,11 +1,10 @@
-
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { CoursesList } from "@/components/courses/CoursesList";
 import { QuizList } from "@/components/quiz/QuizList";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context/auth";
 import { api } from "@/lib/api";
 import { Course, Quiz } from "@/lib/types";
 import { ArrowRight, ShieldCheck, BookOpen, MessageSquare, Award } from "lucide-react";
