@@ -68,7 +68,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           name: data.name || '',
           username: data.username,
           avatarUrl: data.avatar_url,
-          createdAt: new Date(session?.user?.created_at || Date.now()),
+          createdAt: session?.user?.created_at ? new Date(session.user.created_at) : new Date(),
           progress: {
             completedCourses: [],
             completedQuizzes: [],
@@ -154,7 +154,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           name: updates.name,
           username: updates.username,
           avatar_url: updates.avatarUrl,
-          updated_at: new Date()
+          updated_at: new Date().toISOString() // Convert Date to string for storing in database
         })
         .eq('id', user.id);
 
