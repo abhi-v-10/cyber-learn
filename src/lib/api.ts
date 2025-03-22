@@ -1,4 +1,3 @@
-
 import { Course, Quiz, User, UserProgress, Tool, ChatMessage } from "./types";
 
 // Mock user data
@@ -401,13 +400,14 @@ Remember to regularly revisit these materials as the field of cybersecurity evol
   };
 };
 
+// Make sure the mock courses data has the correct difficulty types
 const mockCourses: Course[] = [
   {
     id: "1",
     title: "Introduction to Cybersecurity",
     description: "Learn the fundamentals of cybersecurity, including basic terminology, common threats, and essential security practices.",
     imageUrl: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop",
-    difficulty: "beginner",
+    difficulty: "beginner" as const,
     topics: [
       {
         id: "1-1",
@@ -430,7 +430,7 @@ const mockCourses: Course[] = [
     title: "Network Security Essentials",
     description: "Explore the principles of securing networks, including firewall configuration, intrusion detection, and secure network architectures.",
     imageUrl: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=2034&auto=format&fit=crop",
-    difficulty: "intermediate",
+    difficulty: "intermediate" as const,
     topics: [
       {
         id: "2-1",
@@ -453,7 +453,7 @@ const mockCourses: Course[] = [
     title: "Ethical Hacking Fundamentals",
     description: "Learn ethical hacking methodologies and techniques to identify vulnerabilities in systems and networks.",
     imageUrl: "https://images.unsplash.com/photo-1563206767-5b18f218e8de?q=80&w=2069&auto=format&fit=crop",
-    difficulty: "advanced",
+    difficulty: "advanced" as const,
     topics: [
       {
         id: "3-1",
@@ -476,7 +476,7 @@ const mockCourses: Course[] = [
     title: "Secure Coding Practices",
     description: "Master the art of writing secure code that is resistant to common vulnerabilities like injection attacks, XSS, and CSRF.",
     imageUrl: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070&auto=format&fit=crop",
-    difficulty: "intermediate",
+    difficulty: "intermediate" as const,
     topics: [
       {
         id: "4-1",
@@ -499,7 +499,7 @@ const mockCourses: Course[] = [
     title: "Cloud Security Fundamentals",
     description: "Understand the security challenges and solutions specific to cloud environments, including AWS, Azure, and GCP.",
     imageUrl: "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?q=80&w=2070&auto=format&fit=crop",
-    difficulty: "intermediate",
+    difficulty: "intermediate" as const,
     topics: [
       {
         id: "5-1",
@@ -522,7 +522,7 @@ const mockCourses: Course[] = [
     title: "Mobile Application Security",
     description: "Learn to identify and mitigate security threats specific to mobile applications on iOS and Android platforms.",
     imageUrl: "https://images.unsplash.com/photo-1526406915894-7bcd65f60845?q=80&w=2624&auto=format&fit=crop",
-    difficulty: "advanced",
+    difficulty: "advanced" as const,
     topics: [
       {
         id: "6-1",
@@ -545,7 +545,7 @@ const mockCourses: Course[] = [
     title: "Cryptography for Cybersecurity",
     description: "Understand modern cryptographic algorithms and protocols and learn how to implement them correctly.",
     imageUrl: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=2034&auto=format&fit=crop",
-    difficulty: "intermediate",
+    difficulty: "intermediate" as const,
     topics: [
       {
         id: "7-1",
@@ -568,7 +568,7 @@ const mockCourses: Course[] = [
     title: "Social Engineering Defense",
     description: "Learn to recognize and defend against social engineering attacks that target human psychology rather than technical vulnerabilities.",
     imageUrl: "https://images.unsplash.com/photo-1590859808308-3d2d9c515b1a?q=80&w=2074&auto=format&fit=crop",
-    difficulty: "beginner",
+    difficulty: "beginner" as const,
     topics: [
       {
         id: "8-1",
@@ -591,7 +591,7 @@ const mockCourses: Course[] = [
     title: "Security Operations Center (SOC)",
     description: "Learn the principles and practices of building and operating an effective security operations center.",
     imageUrl: "https://images.unsplash.com/photo-1551808525-51a94da548ce?q=80&w=2233&auto=format&fit=crop",
-    difficulty: "advanced",
+    difficulty: "advanced" as const,
     topics: [
       {
         id: "9-1",
@@ -614,7 +614,7 @@ const mockCourses: Course[] = [
     title: "IoT Security Challenges",
     description: "Understand the unique security challenges posed by Internet of Things devices and learn mitigation strategies.",
     imageUrl: "https://images.unsplash.com/photo-1558346489-22990b33b48b?q=80&w=2070&auto=format&fit=crop",
-    difficulty: "intermediate",
+    difficulty: "intermediate" as const,
     topics: [
       {
         id: "10-1",
