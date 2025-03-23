@@ -10,8 +10,8 @@ const Chatbot = () => {
         <div>
           <h1 className="text-4xl font-bold mb-4">Cybersecurity AI Tutor</h1>
           <p className="text-muted-foreground text-lg">
-            Get instant answers to your cybersecurity questions and learn
-            complex concepts with our AI tutor.
+            Get instant answers to your cybersecurity questions and platform information.
+            Ask about security concepts, courses, quizzes, or any other questions you might have.
           </p>
         </div>
         

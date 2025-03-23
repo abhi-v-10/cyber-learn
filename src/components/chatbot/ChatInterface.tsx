@@ -2,16 +2,12 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Loader, Send } from "lucide-react";
 import { ChatMessage } from "@/lib/types";
 import Markdown from "react-markdown";
 import { toast } from "sonner";
-
-// Gemini API info
-const GEMINI_API_KEY = "AIzaSyDzOoVej0pvx85JzW2a3EU0UmWfHriGTo8";
-const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent";
+import { getChatbotResponse } from "@/lib/chatbot-utils";
 
 export const ChatInterface: React.FC = () => {
   const [input, setInput] = useState("");
@@ -19,7 +15,7 @@ export const ChatInterface: React.FC = () => {
     {
       id: "welcome",
       role: "assistant",
-      content: "Hello! I'm your Cybersecurity AI Tutor powered by Google's Gemini AI. Ask me anything about cybersecurity, ethical hacking, network security, or any other cybersecurity topic you're learning about.",
+      content: "Hello! I'm your Cybersecurity AI Tutor. Ask me anything about cybersecurity, platform features, or any other questions you might have about the learning platform.",
       timestamp: new Date()
     }
   ]);
@@ -49,95 +45,13 @@ export const ChatInterface: React.FC = () => {
     setIsLoading(true);
 
     try {
-      // Call Gemini API with retries
-      const maxRetries = 3;
-      let retries = 0;
-      let response = null;
+      // Get response from our local chatbot utility
+      const response = await getChatbotResponse(input);
       
-      while (retries < maxRetries) {
-        try {
-          response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              contents: [
-                {
-                  role: "user",
-                  parts: [
-                    {
-                      text: `You are a cybersecurity expert assistant. Answer the following question in a helpful, accurate, and concise way, focusing on cybersecurity topics: ${input}`
-                    }
-                  ]
-                }
-              ],
-              generationConfig: {
-                temperature: 0.7,
-                topK: 40,
-                topP: 0.95,
-                maxOutputTokens: 1024,
-              },
-              safetySettings: [
-                {
-                  category: "HARM_CATEGORY_HARASSMENT",
-                  threshold: "BLOCK_ONLY_HIGH"
-                },
-                {
-                  category: "HARM_CATEGORY_HATE_SPEECH",
-                  threshold: "BLOCK_ONLY_HIGH"
-                },
-                {
-                  category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-                  threshold: "BLOCK_ONLY_HIGH"
-                },
-                {
-                  category: "HARM_CATEGORY_DANGEROUS_CONTENT",
-                  threshold: "BLOCK_ONLY_HIGH"
-                }
-              ]
-            }),
-            // Adding timeout for the fetch call
-            signal: AbortSignal.timeout(15000) // 15 second timeout
-          });
-          
-          // If we got a response, break out of the retry loop
-          if (response.ok) break;
-          
-          throw new Error(`API request failed with status ${response.status}`);
-        } catch (err) {
-          retries++;
-          console.log(`Attempt ${retries} failed: ${err.message}`);
-          
-          // If we've exhausted our retries, rethrow
-          if (retries >= maxRetries) throw err;
-          
-          // Wait before the next retry (exponential backoff)
-          await new Promise(resolve => setTimeout(resolve, 1000 * Math.pow(2, retries)));
-        }
-      }
-
-      if (!response || !response.ok) {
-        throw new Error("Failed to get a valid response from the API");
-      }
-
-      const data = await response.json();
-      console.log("Gemini API response:", data);
-
-      let assistantResponse = "";
-      if (data.candidates && data.candidates.length > 0 && 
-          data.candidates[0].content && 
-          data.candidates[0].content.parts && 
-          data.candidates[0].content.parts.length > 0) {
-        assistantResponse = data.candidates[0].content.parts[0].text;
-      } else {
-        assistantResponse = "I apologize, but I couldn't generate a response. Please try asking a different question.";
-      }
-
       const assistantMessage: ChatMessage = {
         id: `assistant-${Date.now()}`,
         role: "assistant",
-        content: assistantResponse,
+        content: response,
         timestamp: new Date()
       };
 
@@ -145,12 +59,12 @@ export const ChatInterface: React.FC = () => {
     } catch (error) {
       console.error("Error sending message:", error);
       
-      toast.error("Network issue detected. Please check your connection and try again.");
+      toast.error("Sorry, I encountered an error processing your request.");
       
       const errorMessage: ChatMessage = {
         id: `error-${Date.now()}`,
         role: "assistant",
-        content: "I'm sorry, I encountered a network issue processing your request. Please check your internet connection and try again in a moment.",
+        content: "I apologize, but I encountered an error processing your request. Please try again with a different question.",
         timestamp: new Date()
       };
       
@@ -226,7 +140,7 @@ export const ChatInterface: React.FC = () => {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Ask me anything about cybersecurity..."
+              placeholder="Ask me anything about cybersecurity or the platform..."
               className="flex-1 min-h-[60px] resize-none"
               maxLength={500}
             />
