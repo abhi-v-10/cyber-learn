@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Quiz } from "@/lib/types";
 import { Button } from "@/components/ui/button";
@@ -8,11 +7,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { AlertCircle, CheckCircle, ChevronLeft, ChevronRight, HelpCircle, XCircle, Trophy, Award } from "lucide-react";
+import { AlertCircle, CheckCircle, ChevronLeft, ChevronRight, HelpCircle, XCircle, Trophy } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
 import { useAuth } from "@/context/auth";
-import { Slider } from "@/components/ui/slider";
 
 interface QuizContentProps {
   quiz: Quiz;
@@ -62,13 +60,13 @@ export const QuizContent: React.FC<QuizContentProps> = ({ quiz }) => {
     }
   };
 
-  // Calculate title requirements
+  // Calculate title requirements - updated to 15 quizzes per level/title
   const getTitleInfo = (quizCount: number) => {
-    if (quizCount < 5) return { title: "Rookie", nextTitle: "Learner", required: 5, progress: quizCount };
-    if (quizCount < 10) return { title: "Learner", nextTitle: "Dedicated", required: 10, progress: quizCount };
-    if (quizCount < 15) return { title: "Dedicated", nextTitle: "Master", required: 15, progress: quizCount };
-    if (quizCount < 20) return { title: "Master", nextTitle: "Expert", required: 20, progress: quizCount };
-    return { title: "Expert", nextTitle: "Expert", required: 20, progress: 20 };
+    if (quizCount < 15) return { title: "Rookie", nextTitle: "Learner", required: 15, progress: quizCount };
+    if (quizCount < 30) return { title: "Learner", nextTitle: "Dedicated", required: 30, progress: quizCount };
+    if (quizCount < 45) return { title: "Dedicated", nextTitle: "Master", required: 45, progress: quizCount };
+    if (quizCount < 60) return { title: "Master", nextTitle: "Expert", required: 60, progress: quizCount };
+    return { title: "Expert", nextTitle: "Expert", required: 60, progress: 60 };
   };
 
   const handleSubmit = async () => {
@@ -106,7 +104,7 @@ export const QuizContent: React.FC<QuizContentProps> = ({ quiz }) => {
             completedQuizzes: newCompletedQuizzes,
             points: user.progress.points + 10,
             title: titleInfo.title,
-            level: Math.ceil(newCompletedQuizzes.length / 5)
+            level: Math.ceil(newCompletedQuizzes.length / 15) // Updated to 15 quizzes per level
           });
         }
       } else {
@@ -129,8 +127,8 @@ export const QuizContent: React.FC<QuizContentProps> = ({ quiz }) => {
 
   if (!currentQuestion) return null;
 
-  // Calculate title progression
-  const titleInfo = user ? getTitleInfo(user.progress.completedQuizzes?.length || 0) : { title: "Rookie", nextTitle: "Learner", required: 5, progress: 0 };
+  // Calculate title progression with updated requirements
+  const titleInfo = user ? getTitleInfo(user.progress.completedQuizzes?.length || 0) : { title: "Rookie", nextTitle: "Learner", required: 15, progress: 0 };
   const titleProgress = Math.min(100, (titleInfo.progress / titleInfo.required) * 100);
   const quizzesRemaining = titleInfo.required - titleInfo.progress;
 

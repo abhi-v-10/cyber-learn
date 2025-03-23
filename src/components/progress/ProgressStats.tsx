@@ -28,18 +28,18 @@ export const ProgressStats: React.FC<ProgressStatsProps> = ({
     ? (completedQuizzesCount / totalQuizzesCount) * 100 
     : 0;
 
-  // Calculate the next title based on completed quizzes
+  // Calculate the next title based on completed quizzes - updated to 15 quizzes per title
   const getTitleForQuizCount = (quizCount: number): string => {
-    if (quizCount < 25) return "Rookie";
-    if (quizCount < 50) return "Learner";
-    if (quizCount < 75) return "Dedicated";
-    if (quizCount < 100) return "Master";
+    if (quizCount < 15) return "Rookie";
+    if (quizCount < 30) return "Learner";
+    if (quizCount < 45) return "Dedicated";
+    if (quizCount < 60) return "Master";
     return "Expert";
   };
 
-  const nextTitle = getTitleForQuizCount(completedQuizzesCount + 25);
-  const nextTitleThreshold = Math.ceil((completedQuizzesCount + 1) / 25) * 25;
-  const nextTitleProgress = ((completedQuizzesCount % 25) / 25) * 100;
+  const nextTitle = getTitleForQuizCount(completedQuizzesCount + 15);
+  const nextTitleThreshold = Math.ceil((completedQuizzesCount + 1) / 15) * 15;
+  const nextTitleProgress = ((completedQuizzesCount % 15) / 15) * 100;
 
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -93,7 +93,7 @@ export const ProgressStats: React.FC<ProgressStatsProps> = ({
         <CardContent>
           <div className="text-2xl font-bold">{user.progress.level}</div>
           <p className="text-xs text-muted-foreground">
-            Each 25 quizzes earns you a new level.
+            Each 15 quizzes earns you a new level.
           </p>
         </CardContent>
       </Card>

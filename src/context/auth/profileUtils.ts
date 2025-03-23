@@ -39,6 +39,7 @@ export const updateUserProgress = async (user: User, progressUpdates: Partial<Us
     const { error } = await supabase
       .from('profiles')
       .update({
+        // Need to use JSON format for the progress data structure
         progress: updatedProgress
       })
       .eq('id', user.id);
