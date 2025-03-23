@@ -16,30 +16,39 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   // Set up the auth state listener
   useEffect(() => {
-    // Set up auth state listener FIRST
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setSession(session);
-        if (session?.user) {
-          const userData = await fetchUserProfile(session.user.id, session);
+    const setupAuth = async () => {
+      try {
+        // Check for existing session
+        const { data: sessionData } = await supabase.auth.getSession();
+        setSession(sessionData.session);
+        
+        if (sessionData.session?.user) {
+          const userData = await fetchUserProfile(sessionData.session.user.id, sessionData.session);
           setUser(userData);
-        } else {
-          setUser(null);
         }
+        
+        // Set up auth state listener
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(
+          async (event, session) => {
+            setSession(session);
+            if (session?.user) {
+              const userData = await fetchUserProfile(session.user.id, session);
+              setUser(userData);
+            } else {
+              setUser(null);
+            }
+          }
+        );
+        
+        return () => subscription.unsubscribe();
+      } catch (error) {
+        console.error("Auth setup error:", error);
+      } finally {
+        setLoading(false);
       }
-    );
+    };
 
-    // THEN check for existing session
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      setSession(session);
-      if (session?.user) {
-        const userData = await fetchUserProfile(session.user.id, session);
-        setUser(userData);
-      }
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
+    setupAuth();
   }, []);
 
   const login = async (email: string, password: string) => {
