@@ -8,10 +8,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { AlertCircle, CheckCircle, ChevronLeft, ChevronRight, HelpCircle, XCircle } from "lucide-react";
+import { AlertCircle, CheckCircle, ChevronLeft, ChevronRight, HelpCircle, XCircle, Trophy, Award } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
 import { useAuth } from "@/context/auth";
+import { Slider } from "@/components/ui/slider";
 
 interface QuizContentProps {
   quiz: Quiz;
@@ -61,6 +62,15 @@ export const QuizContent: React.FC<QuizContentProps> = ({ quiz }) => {
     }
   };
 
+  // Calculate title requirements
+  const getTitleInfo = (quizCount: number) => {
+    if (quizCount < 5) return { title: "Rookie", nextTitle: "Learner", required: 5, progress: quizCount };
+    if (quizCount < 10) return { title: "Learner", nextTitle: "Dedicated", required: 10, progress: quizCount };
+    if (quizCount < 15) return { title: "Dedicated", nextTitle: "Master", required: 15, progress: quizCount };
+    if (quizCount < 20) return { title: "Master", nextTitle: "Expert", required: 20, progress: quizCount };
+    return { title: "Expert", nextTitle: "Expert", required: 20, progress: 20 };
+  };
+
   const handleSubmit = async () => {
     if (selectedAnswers.includes(-1)) {
       toast.error("Please answer all questions before submitting");
@@ -79,29 +89,24 @@ export const QuizContent: React.FC<QuizContentProps> = ({ quiz }) => {
       setQuizResult(result);
       setQuizSubmitted(true);
 
-      if (result.passed) {
+      // Set passing threshold to 50% (5 out of 10 questions)
+      const passingThreshold = 50;
+      const passed = result.score >= passingThreshold;
+      
+      if (passed) {
         toast.success("Congratulations! You passed the quiz!");
-        
-        // Calculate new title based on completed quizzes
-        const getTitleForQuizCount = (quizCount: number): string => {
-          if (quizCount < 25) return "Rookie";
-          if (quizCount < 50) return "Learner";
-          if (quizCount < 75) return "Dedicated";
-          if (quizCount < 100) return "Master";
-          return "Expert";
-        };
         
         // Update user progress
         const completedQuizzes = user.progress.completedQuizzes || [];
         if (!completedQuizzes.includes(quiz.id)) {
           const newCompletedQuizzes = [...completedQuizzes, quiz.id];
-          const newTitle = getTitleForQuizCount(newCompletedQuizzes.length);
+          const titleInfo = getTitleInfo(newCompletedQuizzes.length);
           
           await updateProgress({
             completedQuizzes: newCompletedQuizzes,
             points: user.progress.points + 10,
-            title: newTitle,
-            level: Math.floor(newCompletedQuizzes.length / 25) + 1
+            title: titleInfo.title,
+            level: Math.ceil(newCompletedQuizzes.length / 5)
           });
         }
       } else {
@@ -124,6 +129,11 @@ export const QuizContent: React.FC<QuizContentProps> = ({ quiz }) => {
 
   if (!currentQuestion) return null;
 
+  // Calculate title progression
+  const titleInfo = user ? getTitleInfo(user.progress.completedQuizzes?.length || 0) : { title: "Rookie", nextTitle: "Learner", required: 5, progress: 0 };
+  const titleProgress = Math.min(100, (titleInfo.progress / titleInfo.required) * 100);
+  const quizzesRemaining = titleInfo.required - titleInfo.progress;
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -135,6 +145,26 @@ export const QuizContent: React.FC<QuizContentProps> = ({ quiz }) => {
           {quiz.category}
         </Badge>
       </div>
+
+      {user && (
+        <Card className="bg-card p-4 border">
+          <div className="flex items-center gap-4 mb-3">
+            <Trophy className="h-6 w-6 text-yellow-500" />
+            <div className="flex-1">
+              <div className="flex items-center justify-between mb-1">
+                <div className="font-medium">Current Title: {titleInfo.title}</div>
+                {titleInfo.title !== titleInfo.nextTitle && (
+                  <div className="text-sm text-muted-foreground">
+                    {quizzesRemaining} more {quizzesRemaining === 1 ? 'quiz' : 'quizzes'} to "{titleInfo.nextTitle}"
+                  </div>
+                )}
+              </div>
+              <Progress value={titleProgress} className="h-2" />
+            </div>
+            <Badge variant="secondary">{titleInfo.progress}/{titleInfo.required}</Badge>
+          </div>
+        </Card>
+      )}
 
       <div className="flex items-center gap-2">
         <Progress value={progress} className="flex-1" />
@@ -217,7 +247,7 @@ export const QuizContent: React.FC<QuizContentProps> = ({ quiz }) => {
                     </div>
                     <h3 className="text-2xl font-bold">You passed!</h3>
                     <p className="text-muted-foreground">
-                      You scored {quizResult.score.toFixed(0)}%, which is above the 80% passing threshold.
+                      You scored {quizResult.score.toFixed(0)}%, which is above the 50% passing threshold.
                     </p>
                   </div>
                 ) : (
@@ -227,7 +257,7 @@ export const QuizContent: React.FC<QuizContentProps> = ({ quiz }) => {
                     </div>
                     <h3 className="text-2xl font-bold">Try again</h3>
                     <p className="text-muted-foreground">
-                      You scored {quizResult?.score.toFixed(0)}%, which is below the 80% passing threshold.
+                      You scored {quizResult?.score.toFixed(0)}%, which is below the 50% passing threshold.
                     </p>
                   </div>
                 )}

@@ -29,14 +29,24 @@ export const updateUserProfile = async (user: User, updates: Partial<User>) => {
 
 export const updateUserProgress = async (user: User, progressUpdates: Partial<User['progress']>) => {
   try {
-    // Update local user state with progress updates
+    // Create the updated progress object
     const updatedProgress = {
       ...user.progress,
       ...progressUpdates
     };
     
-    // Here you would usually update the progress in the database
-    // For now, we just update the local state
+    // Update the progress in the database
+    const { error } = await supabase
+      .from('profiles')
+      .update({
+        progress: updatedProgress
+      })
+      .eq('id', user.id);
+      
+    if (error) {
+      throw error;
+    }
+    
     toast.success('Progress updated successfully');
     return {
       ...user,
