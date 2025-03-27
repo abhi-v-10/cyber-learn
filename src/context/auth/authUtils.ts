@@ -18,7 +18,8 @@ export const fetchUserProfile = async (userId: string, session: Session | null):
 
     if (data) {
       // Extract progress from metadata if it exists, otherwise use default values
-      const progress = data.metadata?.progress || {
+      const metadata = data.metadata as Record<string, any> || {};
+      const progress = metadata.progress || {
         completedCourses: [],
         completedQuizzes: [],
         loginStreak: 0,

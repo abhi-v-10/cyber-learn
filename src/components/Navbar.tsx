@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useLocation } from 'react-router-dom';
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { APP_NAME } from "@/lib/constants";
 
 export const Navbar = () => {
   const { user, logout } = useAuth();
@@ -28,7 +29,7 @@ export const Navbar = () => {
     <nav className="bg-background border-b sticky top-0 z-50">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
         <Link to="/" className="text-2xl font-bold">
-          CyberLearn
+          {APP_NAME}
         </Link>
 
         <div className="hidden md:flex items-center space-x-6">
