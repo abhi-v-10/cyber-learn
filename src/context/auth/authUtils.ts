@@ -17,6 +17,17 @@ export const fetchUserProfile = async (userId: string, session: Session | null):
     }
 
     if (data) {
+      // Extract progress from metadata if it exists, otherwise use default values
+      const progress = data.metadata?.progress || {
+        completedCourses: [],
+        completedQuizzes: [],
+        loginStreak: 0,
+        lastLogin: new Date(),
+        points: 0,
+        level: 1,
+        title: "Rookie"
+      };
+
       return {
         id: userId,
         email: session?.user?.email || '',
@@ -24,15 +35,7 @@ export const fetchUserProfile = async (userId: string, session: Session | null):
         username: data.username,
         avatarUrl: data.avatar_url,
         createdAt: session?.user?.created_at ? new Date(session.user.created_at) : new Date(),
-        progress: {
-          completedCourses: [],
-          completedQuizzes: [],
-          loginStreak: 0,
-          lastLogin: new Date(),
-          points: 0,
-          level: 1,
-          title: "Novice"
-        }
+        progress
       };
     }
     return null;

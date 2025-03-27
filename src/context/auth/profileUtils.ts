@@ -35,12 +35,16 @@ export const updateUserProgress = async (user: User, progressUpdates: Partial<Us
       ...progressUpdates
     };
     
-    // Update the progress in the database
+    // Since progress isn't directly a column in the profiles table,
+    // we need to use PostgreSQL's JSONB data structure to store it
+    // We'll store it in a metadata column that we'll add to the database
     const { error } = await supabase
       .from('profiles')
       .update({
-        // Need to use JSON format for the progress data structure
-        progress: updatedProgress
+        // Store the progress data as a metadata field
+        metadata: {
+          progress: updatedProgress
+        }
       })
       .eq('id', user.id);
       
